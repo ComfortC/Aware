@@ -41,7 +41,7 @@
             map:cameraBearing="112.5"
             map:cameraTargetLat="-33.983964"
             map:cameraTargetLng="18.4648159"
-            />
+            map:cameraZoom="13"/>
 
     </LinearLayout>
 
