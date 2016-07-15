@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        m_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+       /* m_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 Log.d("Tag", "Bearing is " + String.valueOf(cameraPosition.bearing));
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         + String.valueOf(cameraPosition.target.longitude));
 
             }
-        });
+        });*/
 
         Log.d("Tag", "Map is Ready");
 
