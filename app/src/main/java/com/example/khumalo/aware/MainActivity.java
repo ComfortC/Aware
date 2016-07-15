@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     ArrayList<Marker> markers;
 
-    private static final LatLng Kenilworth = new LatLng(-33.9925567,18.4676891);
+    private static final LatLng Kenilworth = new LatLng(-34.0047145,18.4689943);
     private static final LatLng Harfield = new LatLng(-33.9861115,18.4690193);
     private static final LatLng Claremont= new LatLng(-33.9814405,18.4648243);
     private static final LatLng Newlands = new LatLng(-33.9728675,18.4651473);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         moveNextLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentCameraPosition = new LatLng(-33.9734056280617,18.46856575459242);
+                currentCameraPosition = new LatLng(-33.96912114785187,18.46262365579605);
                 updatePosition(currentCameraPosition);
             }
         });
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         current = new CameraPosition.Builder()
                 .target(currentCameraPosition)
                 .zoom(13)
-                .bearing(168)
+                .bearing(355)
                 .build();
         /* marker = m_map.addMarker(new MarkerOptions()
                  .position(currentCameraPosition)
@@ -92,10 +92,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         m_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d("Tag","Bearing is "+ String.valueOf(cameraPosition.bearing));
-                Log.d("Tag", "The Zoom is "+String.valueOf(cameraPosition.zoom));
-                Log.d("Tad", "Latitude is "+String.valueOf(cameraPosition.target.latitude)+ "Longitude is "
-                        +String.valueOf(cameraPosition.target.longitude));
+                Log.d("Tag", "Bearing is " + String.valueOf(cameraPosition.bearing));
+                Log.d("Tag", "The Zoom is " + String.valueOf(cameraPosition.zoom));
+                Log.d("Tad", "Latitude is " + String.valueOf(cameraPosition.target.latitude) + "Longitude is "
+                        + String.valueOf(cameraPosition.target.longitude));
 
             }
         });
