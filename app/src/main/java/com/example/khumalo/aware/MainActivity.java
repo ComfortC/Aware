@@ -16,6 +16,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.DoubleSummaryStatistics;
 
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Button moveNextLocation;
     LatLng currentCameraPosition;
     CameraPosition current;
-
+    Marker marker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         moveNextLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentCameraPosition = new LatLng(-33.9659602,18.4688974);
+                m_map.clear();
+                currentCameraPosition = new LatLng(-33.9659602, 18.4688974);
                 updatePosition(currentCameraPosition);
             }
         });
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     private void updatePosition(LatLng currentCameraPosition) {
@@ -50,14 +55,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .target(currentCameraPosition)
                 .zoom(14)
                 .build();
-
-        m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current),5000,null);
+         marker = m_map.addMarker(new MarkerOptions()
+                 .position(currentCameraPosition)
+                 .title("Some Place"));
+         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current),5000,null);
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
        m_map = googleMap;
+        m_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.remove();
+                return false;
+            }
+        });
 
    }
 }
