@@ -179,8 +179,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public class Animator implements Runnable {
 
-        private static final int ANIMATE_SPEEED = 1500;
-        private static final int ANIMATE_SPEEED_TURN = 1000;
+        private static final int ANIMATE_SPEEED = 2500;
+        private static final int ANIMATE_SPEEED_TURN = 1500;
         private static final int BEARING_OFFSET = 20;
 
         private final Interpolator interpolator = new LinearInterpolator();
@@ -246,8 +246,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new CameraPosition.Builder()
                             .target(markerPos)
                             .bearing(bearing + BEARING_OFFSET)
-                            .tilt(90)
-                            .zoom(m_map.getCameraPosition().zoom >=16 ? m_map.getCameraPosition().zoom : 16)
+                            .tilt(30)
+                            .zoom(m_map.getCameraPosition().zoom >=13 ? m_map.getCameraPosition().zoom : 13)
                             .build();
 
             m_map.animateCamera(
