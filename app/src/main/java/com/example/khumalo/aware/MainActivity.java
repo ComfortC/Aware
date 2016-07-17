@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public class Animator implements Runnable {
 
-        private static final int ANIMATE_SPEEED = 2500;
+        private static final int ANIMATE_SPEEED = 10000;
         private static final int ANIMATE_SPEEED_TURN = 2000;
         private static final int BEARING_OFFSET = 20;
 
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public void run() {
-            Log.d("Tag", begin.toString()+ " " + ending.toString());
+
 
             long elapsed = SystemClock.uptimeMillis() - start;
             double t = interpolator.getInterpolation((float)elapsed/ANIMATE_SPEEED);
