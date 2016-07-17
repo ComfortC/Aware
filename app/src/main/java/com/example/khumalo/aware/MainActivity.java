@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Marker marker;
     private Marker selectedMarker;
     private final Handler mHandler = new Handler();
-    private Animator animator = new Animator(Kenilworth,Claremont);
+    private Animator animator = new Animator(Claremont,Kenilworth);
     ArrayList<Marker> markers;
 
     private static final LatLng Kenilworth = new LatLng(-34.0047145,18.4689943);
-    private static final LatLng Harfield = new LatLng(-33.9861115,18.4690193);
+//    private static final LatLng Harfield = new LatLng(-33.9861115,18.4690193);
     private static final LatLng Claremont= new LatLng(-33.9814405,18.4648243);
     private static final LatLng Newlands = new LatLng(-33.9728675,18.4651473);
     private static final LatLng Rosebank = new LatLng(-33.9546765,18.4709463);
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         moveNextLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentCameraPosition = new LatLng(-33.96912114785187,18.46262365579605);
-                updatePosition(currentCameraPosition);
+                /*currentCameraPosition = new LatLng(-33.96912114785187,18.46262365579605);
+                updatePosition(currentCameraPosition);*/
                 animator.startAnimation(false);
             }
         });
@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Marker kenil = m_map.addMarker(new MarkerOptions().title("Kenilworth").position(Kenilworth));
         markers.add(kenil);
-        Marker Har = m_map.addMarker(new MarkerOptions().title("Harfield").position(Harfield));
-        markers.add(Har);
+       /* Marker Har = m_map.addMarker(new MarkerOptions().title("Harfield").position(Harfield));
+        markers.add(Har);*/
         Marker Clar = m_map.addMarker(new MarkerOptions().title("Calaremont").position(Claremont));
         markers.add(Clar);
         Marker New = m_map.addMarker(new MarkerOptions().title("NewLands").position(Newlands));
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
          /*   LatLng markerPos = markers.get(0).getPosition();
             LatLng secondPos = markers.get(1).getPosition();*/
 
-            setupCameraPositionForMovement(ending, begin);
+            setupCameraPositionForMovement(begin,ending );
 
         }
 
