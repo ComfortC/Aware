@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Marker marker;
     private Marker selectedMarker;
     private final Handler mHandler = new Handler();
-    private Animator animator = new Animator();
+    private Animator animator = new Animator(Kenilworth,Claremont);
     ArrayList<Marker> markers;
 
     private static final LatLng Kenilworth = new LatLng(-34.0047145,18.4689943);
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 currentCameraPosition = new LatLng(-33.96912114785187,18.46262365579605);
                 updatePosition(currentCameraPosition);
-                animator.startAnimation(true);
+                animator.startAnimation(false);
             }
         });
 
@@ -193,21 +193,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         long start = SystemClock.uptimeMillis();
 
-        LatLng endLatLng = null;
-        LatLng beginLatLng = null;
 
+        LatLng ending = null;
+        LatLng begin = null;
         boolean showPolyline = false;
 
         private Marker trackingMarker;
 
-        public void reset() {
+
+        public Animator (LatLng endLatLng, LatLng beginLatLng){
+            ending= endLatLng;
+            begin = beginLatLng;
+
+        }
+
+
+      /*  public void reset() {
             resetMarkers();
             start = SystemClock.uptimeMillis();
             currentIndex = 0;
             endLatLng = getEndLatLng();
             beginLatLng = getBeginLatLng();
 
-        }
+        }*/
 
         public void stop() {
             trackingMarker.remove();
@@ -216,20 +224,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         public void initialize(boolean showPolyLine) {
-            reset();
+            /*reset();
             this.showPolyline = showPolyLine;
 
-            highLightMarker(0);
+            highLightMarker(0);*/
 
             if (showPolyLine) {
                 polyLine = initializePolyLine();
             }
 
             // We first need to put the camera in the correct position for the first run (we need 2 markers for this).....
-            LatLng markerPos = markers.get(0).getPosition();
-            LatLng secondPos = markers.get(1).getPosition();
+         /*   LatLng markerPos = markers.get(0).getPosition();
+            LatLng secondPos = markers.get(1).getPosition();*/
 
-            setupCameraPositionForMovement(markerPos, secondPos);
+            setupCameraPositionForMovement(ending, begin);
 
         }
 
@@ -257,8 +265,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         @Override
                         public void onFinish() {
-                            System.out.println("finished camera");
-                            animator.reset();
+                           /* System.out.println("finished camera");
+                            animator.reset();*/
                             Handler handler = new Handler();
                             handler.post(animator);
                         }
@@ -296,14 +304,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         public void startAnimation(boolean showPolyLine) {
-            if (markers.size()>2) {
+//            if (markers.size()>2) {
                 animator.initialize(showPolyLine);
-            }
+//            }
         }
 
 
         @Override
         public void run() {
+            Log.d("Tag", begin.toString()+ " " + ending.toString());
 
             long elapsed = SystemClock.uptimeMillis() - start;
             double t = interpolator.getInterpolation((float)elapsed/ANIMATE_SPEEED);
@@ -311,8 +320,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //			LatLng endLatLng = getEndLatLng();
 //			LatLng beginLatLng = getBeginLatLng();
 
-            double lat = t * endLatLng.latitude + (1-t) * beginLatLng.latitude;
-            double lng = t * endLatLng.longitude + (1-t) * beginLatLng.longitude;
+            double lat = t *ending.latitude + (1-t) * begin.latitude;
+            double lng = t * ending.longitude + (1-t) * begin.longitude;
             LatLng newPosition = new LatLng(lat, lng);
 
             trackingMarker.setPosition(newPosition);
@@ -329,29 +338,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mHandler.postDelayed(this, 16);
             } else {
 
-                System.out.println("Move to next marker.... current = " + currentIndex + " and size = " + markers.size());
+                /*System.out.println("Move to next marker.... current = " + currentIndex + " and size = " + markers.size());
                 // imagine 5 elements -  0|1|2|3|4 currentindex must be smaller than 4
                 if (currentIndex<markers.size()-2) {
 
                     currentIndex++;
 
                     endLatLng = getEndLatLng();
-                    beginLatLng = getBeginLatLng();
+                    beginLatLng = getBeginLatLng();*/
+                if(currentIndex<1) {
 
-
+                    currentIndex++;
                     start = SystemClock.uptimeMillis();
 
-                    LatLng begin = getBeginLatLng();
-                    LatLng end = getEndLatLng();
+                   /* LatLng begin = getBeginLatLng();
+                    LatLng end = getEndLatLng();*/
 
-                    float bearingL = bearingBetweenLatLngs(begin, end);
+                    float bearingL = bearingBetweenLatLngs(begin, ending);
 
-                    highLightMarker(currentIndex);
+                   /* highLightMarker(currentIndex);*/
 
                     CameraPosition cameraPosition =
                             new CameraPosition.Builder()
-                                    .target(end) // changed this...
-                                    .bearing(bearingL  + BEARING_OFFSET)
+                                    .target(ending) // changed this...
+                                    .bearing(bearingL + BEARING_OFFSET)
                                     .tilt(tilt)
                                     .zoom(m_map.getCameraPosition().zoom)
                                     .build();
@@ -366,11 +376,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     start = SystemClock.uptimeMillis();
                     mHandler.postDelayed(animator, 16);
 
-                } else {
+                }else {
+                    currentIndex=0;
+                    stopAnimation();
+                }
+               /* } else {
                     currentIndex++;
                     highLightMarker(currentIndex);
                     stopAnimation();
-                }
+                }*/
 
             }
         }
