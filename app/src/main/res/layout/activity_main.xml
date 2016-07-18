@@ -20,7 +20,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Next Position"
+            android:text="Start"
             android:id="@+id/testing_move_next_location"
              />
 

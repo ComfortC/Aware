@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final LatLng Century_City = new LatLng(-33.8931255,18.5092153);
     private static final LatLng Green_Point = new LatLng(-33.9047245,18.4076673);
-
+    private static final LatLng Clare_Mont = new LatLng(-33.9815935,18.4648163);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
               Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
               MarkerAnimation animator = new MarkerAnimation();
-                animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Spherical());
+              animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Spherical());
 
-            }
+                }
         });
 
 
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .target(currentCameraPosition)
                 .zoom(12)
                 .bearing(43)
+                .tilt(45)
                 .build();
         /* marker = m_map.addMarker(new MarkerOptions()
                  .position(currentCameraPosition)
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker Stadium = m_map.addMarker(new MarkerOptions().title("Calaremont").position(Green_Point));
         markers.add(Stadium);
 
+      /*  Marker Clare= m_map.addMarker(new MarkerOptions().title("Calaremont").position(Clare_Mont));
+        markers.add(Clare);*/
         m_map.addPolyline(new PolylineOptions().add(Century_City).add(Green_Point).color(Color.LTGRAY));
         updatePosition(new LatLng(-33.90133237992072, 18.455616384744644));
    }
