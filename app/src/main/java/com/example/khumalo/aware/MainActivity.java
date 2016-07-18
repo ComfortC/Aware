@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                   public void run() {
                       animator.animateMarkerToHC(trackingMarker, Green_Point, new LatLngInterpolator.Linear());
                   }
-              }, 10500);
+              }, 30500);
 
 
 
