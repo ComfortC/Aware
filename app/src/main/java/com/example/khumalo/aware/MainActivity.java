@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker Stadium = m_map.addMarker(new MarkerOptions().title("Calaremont").position(Green_Point));
         markers.add(Stadium);
 
-        m_map.addPolyline(new PolylineOptions().add(Century_City).add(Green_Point).color(Color.GREEN));
+        m_map.addPolyline(new PolylineOptions().add(Century_City).add(Green_Point).color(Color.LTGRAY));
         updatePosition(new LatLng(-33.90133237992072, 18.455616384744644));
    }
 
