@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
               final Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
               final MarkerAnimation animator = new MarkerAnimation();
-              animator.animateMarkerToGB(trackingMarker, Clare_Mont, new LatLngInterpolator.Linear(),m_map);
+              animator.animateMarkerToGB(trackingMarker, Clare_Mont, new LatLngInterpolator.Linear(), m_map);
               Handler handler = new Handler();
               handler.postDelayed(new Runnable() {
                   public void run() {
-                      animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Linear(),m_map);
+                      animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Linear(), m_map);
                   }
               }, 40500);
 
@@ -81,17 +81,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void updatePosition(LatLng currentCameraPosition) {
+
+
+    private void updatePosition(LatLng currentCameraPosition, LatLng TrackingMarkerPosition) {
+       float bearing = bearingBetweenLatLngs(currentCameraPosition,TrackingMarkerPosition);
+
         current = new CameraPosition.Builder()
-                .target(currentCameraPosition)
+                .target(TrackingMarkerPosition)
                 .zoom(12)
-                .bearing(43)
+                .bearing(bearing)
                 .tilt(45)
                 .build();
         /* marker = m_map.addMarker(new MarkerOptions()
                  .position(currentCameraPosition)
                  .title("Some Place"));*/
-         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current),5000,null);
+         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current), 5000, null);
     }
 
 
@@ -129,13 +133,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
        Marker Clare= m_map.addMarker(new MarkerOptions().title("Calaremont").position(Clare_Mont));
         markers.add(Clare);
         m_map.addPolyline(new PolylineOptions().add(Century_City).add(Clare_Mont).add(Green_Point).color(Color.LTGRAY));
-        updatePosition(new LatLng(-33.90133237992072, 18.455616384744644));
+        updatePosition(Green_Point,Century_City);
    }
 
 
+    private Location convertLatLngToLocation(LatLng latLng) {
+        Location location = new Location("someLoc");
+        location.setLatitude(latLng.latitude);
+        location.setLongitude(latLng.longitude);
+        return location;
+    }
 
-
-
+    private float bearingBetweenLatLngs(LatLng beginLatLng,LatLng endLatLng) {
+        Location beginLocation = convertLatLngToLocation(beginLatLng);
+        Location endLocation = convertLatLngToLocation(endLatLng);
+        return beginLocation.bearingTo(endLocation);
+    }
 
 
 
