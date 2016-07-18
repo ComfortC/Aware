@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -17,19 +18,20 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
 
 
 public class MarkerAnimation {
 
-    public void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator, final GoogleMap map) {
+    public void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator, final GoogleMap map,final Context context) {
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
         final float durationInMs = 40000;
-        final int ANIMATE_SPEEED_TURN = 10;
+        final int ANIMATE_SPEEED_TURN = 5;
         final int BEARING_OFFSET = 20;
         handler.post(new Runnable() {
             long elapsed;
@@ -44,7 +46,10 @@ public class MarkerAnimation {
                 v = interpolator.getInterpolation(t);
                 LatLng target = latLngInterpolator.interpolate(v, startPosition, finalPosition);
                 marker.setPosition(target);
-
+                LatLngBounds bounds = new LatLngBounds(finalPosition,target);
+                int width = context.getResources().getDisplayMetrics().widthPixels;
+                int height = context.getResources().getDisplayMetrics().heightPixels;
+                int padding = (int) (width * 0.25);
                 CameraPosition cameraPosition =
                         new CameraPosition.Builder()
                                 .target(target) // changed this...
@@ -55,7 +60,7 @@ public class MarkerAnimation {
 
 
                 map.animateCamera(
-                        CameraUpdateFactory.newCameraPosition(cameraPosition),
+                        CameraUpdateFactory.newLatLngBounds(bounds,width,height,padding),
                         ANIMATE_SPEEED_TURN,
                         null
                 );

@@ -24,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -61,13 +62,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
               final Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
               final MarkerAnimation animator = new MarkerAnimation();
-              animator.animateMarkerToGB(trackingMarker, Clare_Mont, new LatLngInterpolator.Linear(), m_map);
-              Handler handler = new Handler();
+              animator.animateMarkerToGB(trackingMarker, Clare_Mont, new LatLngInterpolator.Linear(), m_map, getApplicationContext());
+             /* Handler handler = new Handler();
               handler.postDelayed(new Runnable() {
                   public void run() {
-                      animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Linear(), m_map);
+                      animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Linear(), m_map,getApplicationContext());
                   }
-              }, 40500);
+              }, 40500);*/
 
 
 
@@ -86,16 +87,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updatePosition(LatLng currentCameraPosition, LatLng TrackingMarkerPosition) {
        float bearing = bearingBetweenLatLngs(currentCameraPosition,TrackingMarkerPosition);
 
+
         current = new CameraPosition.Builder()
                 .target(TrackingMarkerPosition)
                 .zoom(12)
                 .bearing(bearing)
                 .tilt(45)
                 .build();
+        LatLngBounds bounds = new LatLngBounds(currentCameraPosition,TrackingMarkerPosition);
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.25);
         /* marker = m_map.addMarker(new MarkerOptions()
+
                  .position(currentCameraPosition)
                  .title("Some Place"));*/
-         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current), 5000, null);
+         m_map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,width, height, padding),5000,null);
     }
 
 
@@ -133,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
        Marker Clare= m_map.addMarker(new MarkerOptions().title("Calaremont").position(Clare_Mont));
         markers.add(Clare);
         m_map.addPolyline(new PolylineOptions().add(Century_City).add(Clare_Mont).add(Green_Point).color(Color.LTGRAY));
-        updatePosition(Green_Point,Century_City);
+        updatePosition(Clare_Mont,Century_City);
    }
 
 
