@@ -59,11 +59,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         moveNextLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
-              MarkerAnimation animator = new MarkerAnimation();
+              final Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
+              final MarkerAnimation animator = new MarkerAnimation();
               animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Spherical());
+              Handler handler = new Handler();
+              handler.postDelayed(new Runnable() {
+                  public void run() {
+                      trackingMarker.setPosition(Green_Point);
+                      animator.animateMarkerToGB(trackingMarker, Century_City, new LatLngInterpolator.Spherical());
+                  }
+              }, 10500);
 
-                }
+
+
+            }
         });
 
 
