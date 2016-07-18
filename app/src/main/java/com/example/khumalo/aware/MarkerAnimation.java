@@ -13,19 +13,24 @@ import android.util.Property;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 
 
 public class MarkerAnimation {
-    public void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
+
+    public void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator, final GoogleMap map) {
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
-        final float durationInMs = 10000;
-
+        final float durationInMs = 40000;
+        final int ANIMATE_SPEEED_TURN = 10;
+        final int BEARING_OFFSET = 20;
         handler.post(new Runnable() {
             long elapsed;
             float t;
@@ -37,9 +42,23 @@ public class MarkerAnimation {
                 elapsed = SystemClock.uptimeMillis() - start;
                 t = elapsed / durationInMs;
                 v = interpolator.getInterpolation(t);
+                LatLng target = latLngInterpolator.interpolate(v, startPosition, finalPosition);
+                marker.setPosition(target);
 
-                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, finalPosition));
+                CameraPosition cameraPosition =
+                        new CameraPosition.Builder()
+                                .target(target) // changed this...
+                                .bearing(map.getCameraPosition().bearing)
+                                .tilt(15)
+                                .zoom(map.getCameraPosition().zoom)
+                                .build();
 
+
+                map.animateCamera(
+                        CameraUpdateFactory.newCameraPosition(cameraPosition),
+                        ANIMATE_SPEEED_TURN,
+                        null
+                );
                 // Repeat till progress is complete.
                 if (t < 1) {
                     // Post again 16ms later.
