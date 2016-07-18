@@ -46,7 +46,7 @@ public class MarkerAnimation {
                 v = interpolator.getInterpolation(t);
                 LatLng target = latLngInterpolator.interpolate(v, startPosition, finalPosition);
                 marker.setPosition(target);
-                LatLngBounds bounds = new LatLngBounds(finalPosition,target);
+                LatLngBounds bounds = new LatLngBounds.Builder().include(finalPosition).include(target).build();
                 int width = context.getResources().getDisplayMetrics().widthPixels;
                 int height = context.getResources().getDisplayMetrics().heightPixels;
                 int padding = (int) (width * 0.25);
@@ -60,7 +60,7 @@ public class MarkerAnimation {
 
 
                 map.animateCamera(
-                        CameraUpdateFactory.newLatLngBounds(bounds,width,height,padding),
+                        CameraUpdateFactory.newLatLngBounds(bounds, width, height,padding),
                         ANIMATE_SPEEED_TURN,
                         null
                 );

@@ -63,12 +63,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
               final Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
               final MarkerAnimation animator = new MarkerAnimation();
               animator.animateMarkerToGB(trackingMarker, Clare_Mont, new LatLngInterpolator.Linear(), m_map, getApplicationContext());
-             /* Handler handler = new Handler();
+              Handler handler = new Handler();
               handler.postDelayed(new Runnable() {
                   public void run() {
                       animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Linear(), m_map,getApplicationContext());
                   }
-              }, 40500);*/
+              }, 41000);
 
 
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .bearing(bearing)
                 .tilt(45)
                 .build();
-        LatLngBounds bounds = new LatLngBounds(currentCameraPosition,TrackingMarkerPosition);
+        LatLngBounds bounds = new LatLngBounds.Builder().include(currentCameraPosition).include(TrackingMarkerPosition).build();
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
