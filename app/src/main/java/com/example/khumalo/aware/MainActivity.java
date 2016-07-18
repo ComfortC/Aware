@@ -61,14 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
               Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
               MarkerAnimation animator = new MarkerAnimation();
-                animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator() {
-                    @Override
-                    public LatLng interpolate(float fraction, LatLng a, LatLng b) {
-                        double lat = (b.latitude - a.latitude) * fraction + a.latitude;
-                        double lng = (b.longitude - a.longitude) * fraction + a.longitude;
-                        return new LatLng(lat, lng);
-                    }
-                });
+                animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Spherical());
 
             }
         });
