@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity">
-<LinearLayout
+<!--<LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
@@ -45,9 +45,29 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</LinearLayout>-->
 
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/Latitude_Text_View"
+    android:text="Latitude"
+    android:layout_marginBottom="121dp"
+    android:textColor="#2dc42f"
+    android:textSize="25dp"
+    android:layout_above="@+id/Longitude_Text_View"
+    android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Longitude_Text_View"
+        android:text="Longitude"
+        android:textSize="25dp"
+        android:textColor="#2dc42f"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="161dp" />
 
 
 
