@@ -38,7 +38,7 @@
 
         <service android:name=".BackgroundLocationService"/>
 
-        <receiver android:name=".MainActivity$LocationReceiver" />
+        <receiver android:name=".MainActivity$LocationReceiver" android:enabled="true" />
     </application>
 
 </manifest>

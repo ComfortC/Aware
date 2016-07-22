@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -64,8 +65,8 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
     private static final LatLng Century_City = new LatLng(-33.8931255,18.5092153);
     private static final LatLng Green_Point = new LatLng(-33.9047245,18.4076673);
     private static final LatLng Clare_Mont = new LatLng(-33.9815935,18.4648163);
-    TextView latitudeTextView;
-    TextView longitudeTextView;
+    public static TextView latitudeTextView;
+    public static TextView longitudeTextView;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
    BackgroundLocationService mService;
@@ -270,6 +271,7 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
     @Override
     protected void onResume() {
         super.onResume();
+
         if (mPermissionDenied) {
             // Permission was not granted, display error dialog.
             showMissingPermissionError();
@@ -279,7 +281,9 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
     }
 
 
+
    public static class LocationReceiver extends BroadcastReceiver {
+
 
 
 
@@ -288,8 +292,9 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
 
             LocationResult result = LocationResult.extractResult(intent);
             if(result!=null){
-            Toast.makeText( context, String.valueOf(result.getLastLocation().getLatitude()),Toast.LENGTH_LONG).show();
-                Toast.makeText(context, String.valueOf(result.getLastLocation().getLongitude()), Toast.LENGTH_LONG).show();
+                latitudeTextView.setText(String.valueOf(result.getLastLocation().getLatitude()));
+                longitudeTextView.setText(String.valueOf(result.getLastLocation().getLongitude()));
+
             }
         }
     }

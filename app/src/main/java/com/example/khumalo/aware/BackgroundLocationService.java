@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
@@ -19,6 +20,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -157,6 +159,7 @@ public class BackgroundLocationService extends Service implements
         String msg = Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
         Log.d("debug", msg);
+
         // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg, Constants.LOCATION_FILE);
     }
@@ -228,10 +231,11 @@ public class BackgroundLocationService extends Service implements
 
         // Request location updates using static settings
         Intent intent = new Intent(this, MainActivity.LocationReceiver.class);
+
         PendingIntent locationIntent = PendingIntent.getBroadcast(getApplicationContext(), 14872, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, locationIntent);
+            LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient, mLocationRequest, locationIntent);
         }// This is the changed line.
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected", Constants.LOG_FILE);
 
