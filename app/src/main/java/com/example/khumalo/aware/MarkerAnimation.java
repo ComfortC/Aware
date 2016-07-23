@@ -29,7 +29,7 @@ public class MarkerAnimation {
         final long start = SystemClock.uptimeMillis();
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
         final float durationInMs = 3000;
-        final int ANIMATE_SPEEED_TURN = 10;
+        final int ANIMATE_SPEEED_TURN = 2000;
         final int BEARING_OFFSET = 20;
         handler.post(new Runnable() {
             long elapsed;

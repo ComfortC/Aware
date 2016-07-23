@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void onReceive(Context context, Intent intent) {
 
             LocationResult result = LocationResult.extractResult(intent);
-            if(result!=null){
+            if(result!=null&& m_map!=null){
                 LatLng currentPosition = new LatLng(result.getLastLocation().getLatitude(),result.getLastLocation().getLongitude());
                 if(FirstResultFlag){
                     updatePosition(currentPosition);
