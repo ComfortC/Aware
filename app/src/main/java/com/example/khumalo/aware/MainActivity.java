@@ -51,23 +51,23 @@ import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback*/ {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    GoogleMap m_map;
+    static GoogleMap m_map;
     Button moveNextLocation;
     LatLng currentCameraPosition;
-    CameraPosition current;
+    static CameraPosition current;
     Marker marker;
-    private Marker selectedMarker;
+    private static Marker InitialLocation;
     private final Handler mHandler = new Handler();
     ArrayList<Marker> markers;
 
     private static final LatLng Century_City = new LatLng(-33.8931255,18.5092153);
     private static final LatLng Green_Point = new LatLng(-33.9047245,18.4076673);
-    private static final LatLng Clare_Mont = new LatLng(-33.9815935,18.4648163);
+    private static final LatLng Clare_Mont = new LatLng(-33.957652,18.4590104);
     public static TextView latitudeTextView;
     public static TextView longitudeTextView;
-
+    public static Marker TrackingMarker;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
    BackgroundLocationService mService;
     boolean mBound = false;
@@ -76,62 +76,41 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
      * {@link #onRequestPermissionsResult(int, String[], int[])}.
      */
     private boolean mPermissionDenied = false;
+    public static boolean FirstResultFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        latitudeTextView = (TextView)findViewById(R.id.Latitude_Text_View);
-        longitudeTextView = (TextView)findViewById(R.id.Longitude_Text_View);
 
-      /*  moveNextLocation = (Button)findViewById(R.id.testing_move_next_location);
+        FirstResultFlag = true;
+
 
         Log.d("Tag", "In on Create Method");
         markers = new ArrayList<Marker>();
-        moveNextLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              final Marker trackingMarker = m_map.addMarker(new MarkerOptions().position(Century_City));
-              final MarkerAnimation animator = new MarkerAnimation();
-              animator.animateMarkerToGB(trackingMarker, Clare_Mont, new LatLngInterpolator.Linear(), m_map);
-              Handler handler = new Handler();
-              handler.postDelayed(new Runnable() {
-                  public void run() {
-                      animator.animateMarkerToGB(trackingMarker, Green_Point, new LatLngInterpolator.Linear(), m_map);
-                  }
-              }, 40500);
-
-
-
-            }
-        });
-
 
         MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
+        mapFragment.getMapAsync(this);
 
 
     }
 
 
-/*
-    private void updatePosition(LatLng currentCameraPosition, LatLng TrackingMarkerPosition) {
-       float bearing = bearingBetweenLatLngs(currentCameraPosition,TrackingMarkerPosition);
+    private static void updatePosition(LatLng currentCameraPosition) {
+
 
         current = new CameraPosition.Builder()
-                .target(TrackingMarkerPosition)
-                .zoom(12)
-                .bearing(bearing)
+                .target(currentCameraPosition)
+                .zoom(18)
                 .tilt(45)
                 .build();
-        *//* marker = m_map.addMarker(new MarkerOptions()
-                 .position(currentCameraPosition)
-                 .title("Some Place"));*//*
-         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current), 5000, null);
-    }*/
+
+         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(current), 2000, null);
+        TrackingMarker = m_map.addMarker(new MarkerOptions().position(currentCameraPosition));
+    }
 
 
-  /*  @Override
+    @Override
     public void onMapReady(GoogleMap googleMap) {
        m_map = googleMap;
         m_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -142,31 +121,11 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
             }
         });
 
-      *//*  m_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d("Tag", "Bearing is " + String.valueOf(cameraPosition.bearing));
-                Log.d("Tag", "The Zoom is " + String.valueOf(cameraPosition.zoom));
-                Log.d("Tad", "Latitude is " + String.valueOf(cameraPosition.target.latitude) + "Longitude is "
-                        + String.valueOf(cameraPosition.target.longitude));
 
-            }
-        });*//*
 
-        Log.d("Tag", "Map is Ready");
 
-        Marker Century = m_map.addMarker(new MarkerOptions().title("Century City").position(Century_City));
-        markers.add(Century);
-       *//* Marker Har = m_map.addMarker(new MarkerOptions().title("Harfield").position(Harfield));
-        markers.add(Har);*//*
-        Marker Stadium = m_map.addMarker(new MarkerOptions().title("Calaremont").position(Green_Point));
-        markers.add(Stadium);
 
-       Marker Clare= m_map.addMarker(new MarkerOptions().title("Calaremont").position(Clare_Mont));
-        markers.add(Clare);
-        m_map.addPolyline(new PolylineOptions().add(Century_City).add(Clare_Mont).add(Green_Point).color(Color.LTGRAY));
-        updatePosition(Green_Point, Century_City);
-   }
+        }
 
 
     private Location convertLatLngToLocation(LatLng latLng) {
@@ -182,50 +141,16 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
         return beginLocation.bearingTo(endLocation);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mPermissionDenied) {
-            // Permission was not granted, display error dialog.
-            showMissingPermissionError();
-            mPermissionDenied = false;
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            return;
-        }
 
-        if (PermissionUtils.isPermissionGranted(permissions, grantResults,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            Toast.makeText(this,"The Permision has Been Granted",Toast.LENGTH_LONG).show();
-
-        } else {
-            Toast.makeText(this,"The Permision has Been Dinied",Toast.LENGTH_LONG).show();
-            // Display the missing permission error dialog when the fragments resume.
-            mPermissionDenied = true;
-        }
-    }
 
 
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
-    }*/
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -249,11 +174,6 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
         }
     }
 
-
-    private void showMissingPermissionError() {
-        PermissionUtils.PermissionDeniedDialog
-                .newInstance(true).show(getSupportFragmentManager(), "dialog");
-    }
 
     @Override
     protected void onStart() {
@@ -292,8 +212,15 @@ public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallb
 
             LocationResult result = LocationResult.extractResult(intent);
             if(result!=null){
-                latitudeTextView.setText(String.valueOf(result.getLastLocation().getLatitude()));
-                longitudeTextView.setText(String.valueOf(result.getLastLocation().getLongitude()));
+                LatLng currentPosition = new LatLng(result.getLastLocation().getLatitude(),result.getLastLocation().getLongitude());
+                if(FirstResultFlag){
+                    updatePosition(currentPosition);
+                    FirstResultFlag=false;
+                }
+
+
+                MarkerAnimation animator = new MarkerAnimation();
+                animator.animateMarkerToGB(TrackingMarker, currentPosition, new LatLngInterpolator.Linear(), m_map);
 
             }
         }
