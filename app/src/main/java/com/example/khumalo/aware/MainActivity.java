@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final  int PLACE_PICKER_REQUEST = 2;
     private boolean mPermissionDenied = false;
+    Button pickAplace;
 
     TextView placeDisplay;
     @Override
@@ -38,6 +41,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.activity_main);
         buildGoogleClient();
         placeDisplay = (TextView)findViewById(R.id.picked_place_display_textView);
+        pickAplace = (Button)findViewById(R.id.pick_destination_button);
+        pickAplace.setVisibility(View.INVISIBLE);
+        pickAplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!mPermissionDenied){
+                    buildPlacePicker();
+                }
+            }
+        });
     }
 
     private void buildGoogleClient() {
@@ -72,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(Tag, "The client has been connected");
+        pickAplace.setVisibility(View.VISIBLE);
+
+    }
+
+    private void buildPlacePicker() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
@@ -80,19 +98,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         }else{
             Log.d(Tag, "The Location Access has been Granted");
-            buildPlacePicker();
-        }
-    }
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
 
-    private void buildPlacePicker() {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        try {
-            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
         }
+
     }
 
     @Override
