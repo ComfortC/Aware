@@ -36,9 +36,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC9XTw4airBD9I0KreNRDI1b7I8sTtrKlI"/>
 
-        <service android:name=".BackgroundLocationService"/>
 
-        <receiver android:name=".MainActivity$LocationReceiver" android:enabled="true" />
     </application>
 
 </manifest>
