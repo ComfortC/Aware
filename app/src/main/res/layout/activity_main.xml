@@ -15,6 +15,7 @@
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
      android:text="Hello, World"
+     android:id="@+id/picked_place_display_textView"
      android:layout_gravity="center_horizontal"
      android:textColor="#ea1b1b"
      android:textSize="@dimen/abc_action_bar_progress_bar_size" />
