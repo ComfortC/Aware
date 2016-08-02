@@ -20,9 +20,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -32,25 +35,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final  int PLACE_PICKER_REQUEST = 2;
     private boolean mPermissionDenied = false;
-    Button pickAplace;
 
-    TextView placeDisplay;
+    TextView displayPlace;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         buildGoogleClient();
-        placeDisplay = (TextView)findViewById(R.id.picked_place_display_textView);
-        pickAplace = (Button)findViewById(R.id.pick_destination_button);
-        pickAplace.setVisibility(View.INVISIBLE);
-        pickAplace.setOnClickListener(new View.OnClickListener() {
+        displayPlace = (TextView)findViewById(R.id.picked_place_display_textView);
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
-            public void onClick(View view) {
-                if(!mPermissionDenied){
-                    buildPlacePicker();
-                }
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(Tag, "Place: " + place.getName());
+                displayPlace.setText("You selected "+ place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(Tag, "An error occurred: " + status);
+                displayPlace.setText("An error occurred: " + status);
             }
         });
+
     }
 
     private void buildGoogleClient() {
@@ -85,11 +97,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(Tag, "The client has been connected");
-        pickAplace.setVisibility(View.VISIBLE);
 
     }
 
-    private void buildPlacePicker() {
+
+
+
+/*    private void buildPlacePicker() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
@@ -109,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         }
 
-    }
+    }*/
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -138,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (PermissionUtils.isPermissionGranted(permissions, grantResults,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             Log.d(Tag, "The Location Access has been Granted");
-            buildPlacePicker();
+
 
         } else {
             // Display the missing permission error dialog when the fragments resume.
@@ -154,16 +168,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this,data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                placeDisplay.setText(toastMsg);
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+
 
 
 }
