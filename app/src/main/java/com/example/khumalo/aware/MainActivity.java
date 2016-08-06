@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     FirstResultFlag=false;
                 }
 
-
+                Log.d("Tag", "New Update " + currentPosition.toString());
                 MarkerAnimation animator = new MarkerAnimation();
                 animator.animateMarkerToGB(TrackingMarker, currentPosition, new LatLngInterpolator.Linear(), m_map);
 
